@@ -1,0 +1,7 @@
+Welcome to vents api
+this is a simple api written in go (while learning it simultaniously)
+which is able to log and return previously vents on a remote server
+
+routes:
+/help: get help and usage on this api
+/vents: get/post vents (see help for more details)

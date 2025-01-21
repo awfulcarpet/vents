@@ -15,7 +15,7 @@ func Help(w http.ResponseWriter, r *http.Request) {
 }
 
 func Intro(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Intro\n");
+	http.ServeFile(w, r, "intro");
 }
 
 
