@@ -6,12 +6,26 @@ import (
 	"net/http"
 )
 
+func VentsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "vents\n");
+}
+
+func Help(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Usage\n");
+}
+
+func Intro(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Intro\n");
+}
+
+
 func main() {
 	port := 8080;
 
-	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "API First Steps\n");
-	})
+	http.HandleFunc("/", Intro);
+	http.HandleFunc("/help", Help);
+
+	http.HandleFunc("/vent", VentsHandler);
 
 
 	fmt.Printf("listening on port %d\n", port);
