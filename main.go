@@ -1,14 +1,19 @@
 package main
 
 import (
-	"fmt";
-	"net/http";
+	"fmt"
+	"log"
+	"net/http"
 )
 
 func main() {
+	port := 8080;
+
 	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "API First Steps\n");
 	})
 
-	http.ListenAndServe(":8080", nil);
+
+	fmt.Printf("listening on port %d\n", port);
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil));
 }
