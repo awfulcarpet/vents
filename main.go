@@ -1,20 +1,42 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"time"
 )
 
-func VentsHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-		case "GET":
-			fmt.Fprintf(w, "here are some vents\n");
-		default:
-			http.Error(w, "Request Invalid", http.StatusMethodNotAllowed);
-	}
+type Vents struct {
+	Vents []Vent `json:"vents"`
+}
 
-	fmt.Fprintf(w, "vents\n");
+type Vent struct {
+	Date int64 `json:"date"`
+	Content string `json:"content"`
+}
+
+func VentsHandler(w http.ResponseWriter, r *http.Request) {
+	b, _ := os.ReadFile("vents")
+
+	switch r.Method {
+	case "GET": {
+		var vents Vents
+		json.Unmarshal(b, &vents)
+
+		for i := 0; i < len(vents.Vents); i++ {
+			time := time.Unix(vents.Vents[i].Date, 0);
+
+			fmt.Fprintf(w, "%02d/%02d/%02d %02d:%02d ", time.Year(), time.Month(), time.Day(),
+				time.Hour(), time.Minute());
+			fmt.Fprintf(w, "%s\n", vents.Vents[i].Content);
+		}
+	}
+	default:
+		http.Error(w, "Request Invalid", http.StatusMethodNotAllowed);
+	}
 }
 
 func Help(w http.ResponseWriter, r *http.Request) {
