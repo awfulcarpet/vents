@@ -101,18 +101,34 @@ func Secret(w http.ResponseWriter, r *http.Request) {
 
 func LatestHandler(w http.ResponseWriter, r *http.Request) {
 	vents := GetJSON("vents")
-	last := len(vents.Vents) - 1
+	last := len(vents.Vents)
 
 	if (last <= 0) {
 		fmt.Fprintf(w, "there are not vents\n")
 		return
 	}
 
-	time := time.Unix(vents.Vents[last].Date, 0);
 
-	fmt.Fprintf(w, "%02d/%02d/%02d %02d:%02d ", time.Year(), time.Month(), time.Day(),
-		time.Hour(), time.Minute());
-	fmt.Fprintf(w, "%s\n", vents.Vents[last].Content);
+	newest := last - 1
+
+	query := r.URL.Query()
+	num, exists := query["n"]
+
+	if exists == true {
+		count, err := strconv.Atoi(num[0])
+
+		if err == nil {
+			newest = last - count
+		}
+	}
+
+	for i := newest; i < last; i++ {
+		time := time.Unix(vents.Vents[i].Date, 0);
+
+		fmt.Fprintf(w, "%02d/%02d/%02d %02d:%02d ", time.Year(), time.Month(), time.Day(),
+			time.Hour(), time.Minute());
+		fmt.Fprintf(w, "%s\n", vents.Vents[i].Content);
+	}
 }
 
 func JsonHandler(w http.ResponseWriter, r *http.Request) {
