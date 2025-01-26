@@ -24,8 +24,11 @@ GET /latest
 GET /json
 	get the list of vents as a json
 
-POST /vents {data}
-	saves {data} as a new vent in the database
+POST /vents
+	saves new vent in the database
+
+	body parameters
+		anything passed in will be saved as a new vent in the database
 
 POST /vent
 	does the same thing as POST /vents
