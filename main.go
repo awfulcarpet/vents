@@ -22,14 +22,19 @@ type Vent struct {
 	Content string `json:"content"`
 }
 
-func VentsHandler(w http.ResponseWriter, r *http.Request) {
+func GetJSON(path string) Vents {
 	b, _ := os.ReadFile("vents")
 	var vents Vents
 	json.Unmarshal(b, &vents)
 
+	return vents
+}
+
+func VentsHandler(w http.ResponseWriter, r *http.Request) {
+	vents := GetJSON("vents")
+
 	switch r.Method {
 	case "GET": {
-
 		for i := 0; i < len(vents.Vents); i++ {
 			time := time.Unix(vents.Vents[i].Date, 0);
 
@@ -51,6 +56,7 @@ func VentsHandler(w http.ResponseWriter, r *http.Request) {
 
 		os.WriteFile("vents", json, 0644);
 	}
+
 	default:
 		http.Error(w, "Request Invalid", http.StatusMethodNotAllowed);
 	}
@@ -93,6 +99,22 @@ func Secret(w http.ResponseWriter, r *http.Request) {
 	f.WriteString(fmt.Sprintf("%d", time.Now().Unix()))
 }
 
+func LatestHandler(w http.ResponseWriter, r *http.Request) {
+	vents := GetJSON("vents")
+	last := len(vents.Vents) - 1
+
+	if (last <= 0) {
+		fmt.Fprintf(w, "there are not vents\n")
+		return
+	}
+
+	time := time.Unix(vents.Vents[last].Date, 0);
+
+	fmt.Fprintf(w, "%02d/%02d/%02d %02d:%02d ", time.Year(), time.Month(), time.Day(),
+		time.Hour(), time.Minute());
+	fmt.Fprintf(w, "%s\n", vents.Vents[last].Content);
+}
+
 
 
 func main() {
@@ -110,6 +132,7 @@ func main() {
 
 	http.HandleFunc("/vent", VentsHandler);
 	http.HandleFunc("/vents", VentsHandler);
+	http.HandleFunc("/latest", LatestHandler);
 
 	http.HandleFunc(secret_route, Secret);
 
