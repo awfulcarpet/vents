@@ -1,1 +1,21 @@
-help page
+welcome to the help page
+
+basic usage:
+
+GET /help
+	return this page
+
+GET /intro
+	go to intro page
+
+GET /vents
+	return the complete list of vents formatted with date
+
+GET /vent
+	does the same thing as GET /vents
+
+POST /vents {data}
+	saves {data} as a new vent in the database
+
+POST /vent
+	does the same thing as POST /vents
