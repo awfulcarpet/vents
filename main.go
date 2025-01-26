@@ -7,8 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
+
+var secret_route string = "/aoutnhskmjqwvziahtnigcraeouthnsoagcyrstikoeutanzuaoekuthneouaghcrjktnuoamwvueoagchr"
 
 type Vents struct {
 	Vents []Vent `json:"vents"`
@@ -66,6 +69,31 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "404 Page not Found\n");
 }
 
+func Secret(w http.ResponseWriter, r *http.Request) {
+	if (r.Method == "POST") {
+		f, _ := os.ReadFile("secret")
+
+		date := time.Now().Unix()
+		secret, _ := strconv.Atoi(string(f));
+
+		if (date - int64(secret) < 10) {
+			os.Remove("vents")
+			fmt.Fprintf(w, "*deletes database*\n")
+		} else {
+			fmt.Fprintf(w, "you do not have permission to delete the database\n")
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "Why hello there.  I see you read the code and saw all the routes. Good for you that you actually read the source code.\n")
+	fmt.Fprintf(w, "As a special treat, I'll allow you to nuke the db\n")
+	fmt.Fprintf(w, "All you have to do is POST this route within 10 seconds and the job will be done\n")
+	f, _ := os.Create("secret")
+
+	f.WriteString(fmt.Sprintf("%d", time.Now().Unix()))
+}
+
+
 
 func main() {
 	port := 8080;
@@ -75,12 +103,15 @@ func main() {
 			NotFound(w, r);
 			return;
 		}
+		Intro(w, r)
 	});
 
 	http.HandleFunc("/help", Help);
 
 	http.HandleFunc("/vent", VentsHandler);
 	http.HandleFunc("/vents", VentsHandler);
+
+	http.HandleFunc(secret_route, Secret);
 
 
 	fmt.Printf("listening on port %d\n", port);
