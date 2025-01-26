@@ -17,6 +17,10 @@ GET /vent
 GET /latest
 	return the latest vent in the db
 
+	Queries
+	n integer
+		get the last n vents instead of the very last vent from server
+
 GET /json
 	get the list of vents as a json
 
