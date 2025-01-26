@@ -115,6 +115,9 @@ func LatestHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s\n", vents.Vents[last].Content);
 }
 
+func JsonHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "vents")
+}
 
 
 func main() {
@@ -133,6 +136,7 @@ func main() {
 	http.HandleFunc("/vent", VentsHandler);
 	http.HandleFunc("/vents", VentsHandler);
 	http.HandleFunc("/latest", LatestHandler);
+	http.HandleFunc("/json", JsonHandler);
 
 	http.HandleFunc(secret_route, Secret);
 

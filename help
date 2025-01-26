@@ -17,6 +17,9 @@ GET /vent
 GET /latest
 	return the latest vent in the db
 
+GET /json
+	get the list of vents as a json
+
 POST /vents {data}
 	saves {data} as a new vent in the database
 
