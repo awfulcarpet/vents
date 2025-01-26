@@ -1,5 +1,6 @@
 # Vents
 a little server to POST and GET your frustrations into
+![vents being used](res/replay.gif)
 
 # Running
 ```sh
