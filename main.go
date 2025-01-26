@@ -63,11 +63,11 @@ func VentsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Help(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "help");
+	http.ServeFile(w, r, "text/help");
 }
 
 func Intro(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "intro");
+	http.ServeFile(w, r, "text/intro");
 }
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
@@ -120,6 +120,11 @@ func LatestHandler(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			newest = last - count
 		}
+	}
+
+	if (newest < 0) {
+		fmt.Fprintf(w, "supplied argument is larger than total amount of vents in database\n")
+		return
 	}
 
 	for i := newest; i < last; i++ {
